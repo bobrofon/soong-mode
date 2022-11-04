@@ -75,6 +75,15 @@
 (defconst soong-font-lock-keywords soong-font-lock-keywords-3
   "Default value of `font-lock-keywords' in `soong-mode'.")
 
+(defconst soong-mode-syntax-table
+  (let ((table (make-syntax-table)))
+    ;; C++ style comments
+    (modify-syntax-entry ?/ ". 124b" table)
+    (modify-syntax-entry ?* ". 23" table)
+    (modify-syntax-entry ?\n "> b" table)
+    table)
+  "Syntax table for `soong-mode'.")
+
 ;;;###autoload
 (define-derived-mode soong-mode prog-mode "Soong"
   "Major mode for editing Soong build files."
