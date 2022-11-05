@@ -259,6 +259,54 @@
     table)
   "Syntax table for `soong-mode'.")
 
+(defcustom soong-bpfmt-path "bpfmt"
+  "Path to bpfmt (.bp files format) tool."
+  :type 'string
+  :group 'soong
+  :link '(custom-manual "(soong-mode.el) Customization"))
+
+(defcustom soong-bpfmt-sort-arrays nil
+  "Specifies whether to sort arrays during formatting."
+  :type 'boolean
+  :group 'soong
+  :link '(custom-manual "(soong-mode.el) Customization"))
+
+(defun soong--build-bpfmt-args ()
+  "Make command line arguments to run bpfmt tool."
+  (mapcar #'shell-quote-argument
+          (if soong-bpfmt-sort-arrays
+              (list "-o" "-s")
+            (list "-o"))))
+
+(defun soong-reformat-buffer ()
+  "Apply bpfmt formatting to the current buffer."
+  (interactive)
+  (let (visible-buffer
+        output-buffer
+        status)
+    (setq visible-buffer (current-buffer))
+    (with-temp-buffer
+      (setq output-buffer (current-buffer))
+      (set-buffer visible-buffer)
+      (setq status (apply #'call-process-region
+                          (append (list (point-min) (point-max)
+                                        soong-bpfmt-path
+                                        nil
+                                        (list output-buffer shell-command-default-error-buffer)
+                                        nil)
+                                  (soong--build-bpfmt-args))))
+      (when (eq status 0)
+        (replace-buffer-contents output-buffer)
+        ;; If current buffer is already formatted, bpfmt will do nothing.
+        ;; And it is useful to be at least a little verbose in this situation.
+        (message "bpfmt applied")))))
+
+(defvar soong-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c =") #'soong-reformat-buffer)
+    map)
+  "Keymap for `soong-mode'.")
+
 ;;;###autoload
 (define-derived-mode soong-mode prog-mode "Soong"
   "Major mode for editing Soong build files."
