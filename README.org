@@ -1,2 +1,16 @@
 * Emacs major mode for the Soong build system files
 [[https://android.googlesource.com/platform/build/soong/+/refs/heads/master/README.md][The Soong build system]]
+
+* Installation
+** From sources using quelpa and use-package
+#+NAME: install-with-quelpa
+#+BEGIN_SRC emacs-lisp
+;; Install quelpa from elpa archive.
+(use-package quelpa
+  :ensure t
+  :config
+  ;; Install soong-mode form github when quelpa will be ready.
+  (quelpa '(soong-mode
+            :fetcher github
+            :repo "bobrofon/soong-mode")))
+#+END_SRC
