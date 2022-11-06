@@ -307,6 +307,17 @@
     map)
   "Keymap for `soong-mode'.")
 
+(defcustom soong-bpfmt-reformat-on-save nil
+  "If not nil, bpfmt formatting will be automatically applied on buffer save."
+  :type 'boolean
+  :group 'soong
+  :link '(custom-manual "(soong-mode.el) Customization"))
+
+(defun soong--before-save-hook ()
+  "Reformat current buffer if `soong-remormat-on-save' is enabled."
+  (when soong-bpfmt-reformat-on-save
+    (soong-reformat-buffer)))
+
 ;;;###autoload
 (define-derived-mode soong-mode prog-mode "Soong"
   "Major mode for editing Soong build files."
@@ -316,7 +327,8 @@
   (setq-local font-lock-defaults '((soong-font-lock-keywords
                                     soong-font-lock-keywords-1
                                     soong-font-lock-keywords-2
-                                    soong-font-lock-keywords-3))))
+                                    soong-font-lock-keywords-3)))
+  (add-hook 'before-save-hook #'soong--before-save-hook nil t))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.bp\\'" . soong-mode))
