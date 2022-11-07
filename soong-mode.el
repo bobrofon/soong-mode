@@ -74,6 +74,7 @@
                     "compile_multilib"
                     "conlyflags"
                     "cppflags"
+                    "cpp_std"
                     "darwin"
                     "data"
                     "device_specific"
