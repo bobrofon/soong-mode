@@ -381,7 +381,10 @@ If nil, auto-detected version will be used."
                                     soong-font-lock-keywords-1
                                     soong-font-lock-keywords-2
                                     soong-font-lock-keywords-3)))
-  (add-hook 'before-save-hook #'soong--before-save-hook nil t))
+  (add-hook 'before-save-hook #'soong--before-save-hook nil t)
+  ;; Comments
+  (setq-local comment-start "// ")
+  (setq-local comment-end ""))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.bp\\'" . soong-mode))
