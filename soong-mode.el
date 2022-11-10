@@ -260,11 +260,63 @@
     table)
   "Syntax table for `soong-mode'.")
 
-(defcustom soong-bpfmt-path "bpfmt"
-  "Path to bpfmt (.bp files format) tool."
+;;; Stuff to discover path to bpfmt tool.
+;;
+;; Usually, Android.bp files are inside the AOSP source tree and bpfmt from the
+;; same source tree should be used. Although it should also be possible to use
+;; bpfmt from PATH (at least for Android.bp files outside of AOSP tree).
+;; The base idea is looking for prebuilts/build-tools/*/bin/bpfmt file starting
+;; from all parent directories.
+
+(defun soong--path-join (&rest entries)
+  "Joins multiple path components in a single string in OS-independent way.
+ENTRIES is a sequence of strings.
+Every string should be a name of a directory, except the last one.
+The last one can be a name of a file."
+  (directory-file-name
+   (seq-reduce #'concat (mapcar #'file-name-as-directory entries) "")))
+
+(defun soong--get-aosp-bin-dir ()
+    "Get directory name for arch-specific binary prebuilts within AOSP repository."
+    (cond ((eq system-type 'gnu/linux) "linux-x86")
+          ((eq system-type 'darwin) "darwin-x86")))
+
+(defun soong--get-aosp-bpfmt-default-relpath ()
+  "Get default relative path to AOSP version of bpfmt."
+  (let ((bin-dir (soong--get-aosp-bin-dir)))
+    (unless (not bin-dir) (soong--path-join "prebuilts" "build-tools" bin-dir "bin" "bpfmt"))))
+
+(defun soong--find-aosp-root ()
+  "Try to locate root path to the current AOSP source tree."
+  (let ((current (buffer-file-name))
+        (bpfmt-relpath (soong--get-aosp-bpfmt-default-relpath)))
+    (unless (or (not current) (not bpfmt-relpath))
+      (locate-dominating-file
+       current
+       (lambda (root)
+         (file-exists-p (concat root bpfmt-relpath)))))))
+
+(defun soong--find-aosp-bpfmt ()
+  "Try to locate bpfmt inside of the current AOSP source tree."
+  (let ((root (soong--find-aosp-root))
+        (bpfmt-relpath (soong--get-aosp-bpfmt-default-relpath)))
+    (if root (concat root bpfmt-relpath)
+      ;; use system version as a default
+      "bpfmt")))
+
+(defcustom soong-bpfmt-path nil
+  "Path to bpfmt (.bp files format) tool.
+If nil, auto-detected version will be used."
   :type 'string
   :group 'soong
   :link '(custom-manual "(soong-mode.el) Customization"))
+
+(defun soong--bpfmt-path ()
+  "Return path to bpfmt tool."
+  (if soong-bpfmt-path soong-bpfmt-path
+    (soong--find-aosp-bpfmt)))
+
+;;; Formatting
 
 (defcustom soong-bpfmt-sort-arrays nil
   "Specifies whether to sort arrays during formatting."
@@ -291,7 +343,7 @@
       (set-buffer visible-buffer)
       (setq status (apply #'call-process-region
                           (append (list (point-min) (point-max)
-                                        soong-bpfmt-path
+                                        (soong--bpfmt-path)
                                         nil
                                         (list output-buffer shell-command-default-error-buffer)
                                         nil)
