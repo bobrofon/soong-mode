@@ -31,6 +31,8 @@
 
 ;;; Code:
 
+(require 'python)
+
 (defconst soong-font-lock-keywords-1
   ;; function declarations, file directives, strings and comments
   `()
@@ -377,6 +379,11 @@ If nil, auto-detected version will be used."
   ;; Soong convention is to use 4 spaces for indentation.
   (setq-local tab-width 4)
   (setq-local indent-tabs-mode nil)
+  ;; And it has Python indentation rules.
+  (setq-local python-indent-offset 4)
+  (setq-local indent-line-function #'python-indent-line-function)
+  (setq-local indent-region-function #'python-indent-region)
+  (setq-local electric-indent-inhibit t)
   (setq-local font-lock-defaults '((soong-font-lock-keywords
                                     soong-font-lock-keywords-1
                                     soong-font-lock-keywords-2
