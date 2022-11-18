@@ -198,6 +198,7 @@
                     "use_embedded_native_libs"
                     "uses_libs"
                     "vendor"
+                    "vendor_available"
                     "version"
                     "version_script"
                     "vintf_fragments"
