@@ -13,4 +13,14 @@
   (quelpa '(soong-mode
             :fetcher github
             :repo "bobrofon/soong-mode")))
+
+;; Configure soong-mode
+(use-package soong-mode
+  ;; Managed my quelpa
+  :ensure nil
+  :custom
+  ;; to sort arrays during formatting
+  (soong-bpfmt-sort-arrays t)
+  ;; to automatically apply formating on save
+  (soong-bpfmt-reformat-on-save t))
 #+END_SRC
