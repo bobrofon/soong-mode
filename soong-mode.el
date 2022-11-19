@@ -6,7 +6,7 @@
 ;; Keywords: languages
 ;; URL: https://github.com/bobrofon/soong-mode
 ;; Package-Requires: ((emacs "27.1"))
-;; Version: 0.1.1-snapshot
+;; Version: 0.1.1
 
 ;; This file is not part of GNU Emacs.
 
