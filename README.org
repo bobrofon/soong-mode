@@ -1,6 +1,13 @@
 * Emacs major mode for the Soong build system files
 [[https://android.googlesource.com/platform/build/soong/+/refs/heads/master/README.md][The Soong build system]]
 
+* Supported features
+- partially syntax highlighting (constants, some builtin targets, some builtin attributes)
+- single-line and multi-line comments
+- auto-formatting
+- auto-indentation
+- context-free completion-at-point (using static dictionary)
+
 * Installation
 ** From sources using quelpa and use-package
 #+NAME: install-with-quelpa
@@ -24,3 +31,8 @@
   ;; to automatically apply formating on save
   (soong-bpfmt-reformat-on-save t))
 #+END_SRC
+
+* Default bindings
+| *binding* | *function*              | *effect*                                      |
+|-----------+-------------------------+-----------------------------------------------|
+| ~C-c =~   | ~soong-reformat-buffer~ | Apply bpfmt formatting to the current buffer. |
