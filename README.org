@@ -1,4 +1,6 @@
 * Emacs major mode for editing Soong build files
+[[https://melpa.org/#/soong-mode][file:https://melpa.org/packages/soong-mode-badge.svg]]
+
 [[https://android.googlesource.com/platform/build/soong/+/refs/heads/master/README.md][The Soong build system]]
 
 * Supported features
@@ -25,6 +27,19 @@
 (use-package soong-mode
   ;; Managed my quelpa
   :ensure nil
+  :custom
+  ;; to sort arrays during formatting
+  (soong-bpfmt-sort-arrays t)
+  ;; to automatically apply formating on save
+  (soong-bpfmt-reformat-on-save t))
+#+END_SRC
+
+** From MELPA using use-package
+#+NAME: install-from-melpa
+#+BEGIN_SRC emacs-lisp
+;; Install and configure soong-mode
+(use-package soong-mode
+  :ensure t
   :custom
   ;; to sort arrays during formatting
   (soong-bpfmt-sort-arrays t)
