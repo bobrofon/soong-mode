@@ -295,13 +295,13 @@ The last one can be a name of a file."
 (defun soong--get-aosp-bpfmt-default-relpath ()
   "Get default relative path to AOSP version of bpfmt."
   (let ((bin-dir (soong--get-aosp-bin-dir)))
-    (unless (not bin-dir) (soong--path-join "prebuilts" "build-tools" bin-dir "bin" "bpfmt"))))
+    (when bin-dir (soong--path-join "prebuilts" "build-tools" bin-dir "bin" "bpfmt"))))
 
 (defun soong--find-aosp-root ()
   "Try to locate root path to the current AOSP source tree."
   (let ((current (buffer-file-name))
         (bpfmt-relpath (soong--get-aosp-bpfmt-default-relpath)))
-    (unless (or (not current) (not bpfmt-relpath))
+    (when (and current bpfmt-relpath)
       (locate-dominating-file
        current
        (lambda (root)
@@ -378,7 +378,7 @@ If nil, auto-detected version will be used."
   :link '(custom-manual "(soong-mode.el) Customization"))
 
 (defun soong--before-save-hook ()
-  "Reformat current buffer if `soong-remormat-on-save' is enabled."
+  "Reformat current buffer if `soong-reformat-on-save' is enabled."
   (when soong-bpfmt-reformat-on-save
     (soong-reformat-buffer)))
 
