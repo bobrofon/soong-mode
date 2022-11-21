@@ -1,4 +1,4 @@
-* Emacs major mode for the Soong build system files
+* Emacs major mode for editing Soong build files
 [[https://android.googlesource.com/platform/build/soong/+/refs/heads/master/README.md][The Soong build system]]
 
 * Supported features

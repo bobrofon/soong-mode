@@ -1,4 +1,4 @@
-;;; soong-mode.el --- Support for the Soong build system -*- lexical-binding: t; -*-
+;;; soong-mode.el --- Major mode for editing Soong build files -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2022  Sergey Bobrenok <bobrofon@gmail.com>
 
